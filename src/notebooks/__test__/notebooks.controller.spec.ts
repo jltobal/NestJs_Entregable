@@ -4,14 +4,18 @@ import { NotebooksService } from '../notebooks.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CreateNotebookDto } from '../dto/create-notebook.dto';
 import { Notebook } from '../entities/notebook.entity';
+import { UpdateNotebookDto } from '../dto/update-notebook.dto';
 
 describe('NotebooksController', () => {
   let controller: NotebooksController;
 
-  // Mock de las funcionaes del SERVICE
+  // Mock del service con todas las funciones
   const mockService = {
     findAll: jest.fn(),
     create: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    remove: jest.fn(),
   };
 
   beforeEach(async () => {
