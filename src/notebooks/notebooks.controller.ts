@@ -1,4 +1,3 @@
-// notebooks.controller.ts
 import {
   Controller,
   Get,
@@ -7,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { Param } from '@nestjs/common';
 import { NotebooksService } from './notebooks.service';
@@ -55,5 +55,10 @@ export class NotebooksController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.notebooksService.remove(Number(id));
   }
 }

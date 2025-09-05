@@ -9,7 +9,6 @@ import { UpdateNotebookDto } from '../dto/update-notebook.dto';
 describe('NotebooksController', () => {
   let controller: NotebooksController;
 
-  // Mock del service con todas las funciones
   const mockService = {
     findAll: jest.fn(),
     create: jest.fn(),
@@ -34,16 +33,14 @@ describe('NotebooksController', () => {
     expect(controller).toBeDefined();
   });
 
+  //Traer todos
   describe('findAll', () => {
     it('deberia devolver la lista de elementos desde el service', async () => {
       const mockList: Notebook[] = [
         { id: 1, title: 'Notebook 1', content: 'i9' },
       ];
-
       mockService.findAll.mockResolvedValue(mockList);
-
       const result = await controller.findAll();
-
       expect(result).toEqual(mockList);
       expect(mockService.findAll).toHaveBeenCalled();
     });
@@ -55,20 +52,17 @@ describe('NotebooksController', () => {
           HttpStatus.INTERNAL_SERVER_ERROR,
         ),
       );
-
       await expect(controller.findAll()).rejects.toThrow(HttpException);
     });
   });
 
+  //Crear notebook
   describe('create', () => {
     it('deberia llamar al service con el DTO correcto', async () => {
       const dto: CreateNotebookDto = { title: 'Notebook 1', content: 'i9' };
       const created = { id: 1, ...dto };
-
       mockService.create.mockResolvedValue(created);
-
       const result = await controller.create(dto);
-
       expect(result).toEqual(created);
       expect(mockService.create).toHaveBeenCalledWith(dto);
     });
@@ -78,19 +72,15 @@ describe('NotebooksController', () => {
         new HttpException('Error creating notebook', HttpStatus.BAD_REQUEST),
       );
 
-      const invalidDto: CreateNotebookDto = {
-        title: 'test',
-        content: '',
-      };
-
+      const invalidDto: CreateNotebookDto = { title: 'test', content: '' };
       await expect(controller.create(invalidDto)).rejects.toThrow(
         HttpException,
       );
     });
   });
 
-  //Test para Find One
-  describe('Encontrar una notebook por ID', () => {
+  //Buscar uno por id
+  describe('findOne', () => {
     it('deberia devolver una notebook por ID', async () => {
       const notebook: Notebook = { id: 1, title: 'notebook 1', content: 'i9' };
       mockService.findOne.mockResolvedValue(notebook);
@@ -98,9 +88,16 @@ describe('NotebooksController', () => {
       expect(result).toEqual(notebook);
       expect(mockService.findOne).toHaveBeenCalledWith(1);
     });
+
+    it('deberia lanzar HttpException si la notebook no se encuentra', async () => {
+      mockService.findOne.mockRejectedValue(
+        new HttpException('Notebook not found', HttpStatus.NOT_FOUND),
+      );
+      await expect(controller.findOne('99')).rejects.toThrow(HttpException);
+    });
   });
 
-  //Test para Update
+  // Update test
   describe('update', () => {
     it('deberia llamar al service para actualizar una notebook', async () => {
       const updateDto: UpdateNotebookDto = { title: 'Updated Notebook' };
@@ -109,11 +106,8 @@ describe('NotebooksController', () => {
         title: 'Updated Notebook',
         content: 'i9',
       };
-
       mockService.update.mockResolvedValue(updatedNotebook);
-
       const result = await controller.update('1', updateDto);
-
       expect(result).toEqual(updatedNotebook);
       expect(mockService.update).toHaveBeenCalledWith(1, updateDto);
     });
@@ -122,8 +116,29 @@ describe('NotebooksController', () => {
       mockService.update.mockRejectedValue(
         new HttpException('Notebook not found', HttpStatus.NOT_FOUND),
       );
-
       await expect(controller.update('99', {})).rejects.toThrow(HttpException);
+    });
+  });
+
+  //Remove test
+  describe('remove', () => {
+    it('deberia llamar al service para eliminar una notebook', async () => {
+      const removedNotebook: Notebook = {
+        id: 1,
+        title: 'Notebook 1',
+        content: 'i9',
+      };
+      mockService.remove.mockResolvedValue(removedNotebook);
+      const result = await controller.remove('1');
+      expect(result).toEqual(removedNotebook);
+      expect(mockService.remove).toHaveBeenCalledWith(1);
+    });
+
+    it('deberia lanzar una excepcion si la notebook a eliminar no existe', async () => {
+      mockService.remove.mockRejectedValue(
+        new HttpException('Notebook not found', HttpStatus.NOT_FOUND),
+      );
+      await expect(controller.remove('99')).rejects.toThrow(HttpException);
     });
   });
 });
