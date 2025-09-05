@@ -6,9 +6,12 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
+import { Param } from '@nestjs/common';
 import { NotebooksService } from './notebooks.service';
 import { CreateNotebookDto } from './dto/create-notebook.dto';
+import { UpdateNotebookDto } from './dto/update-notebook.dto';
 import { Notebook } from './entities/notebook.entity';
 
 @Controller('notebooks')
@@ -25,6 +28,19 @@ export class NotebooksController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Notebook> {
+    return this.notebooksService.findOne(Number(id));
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateNotebookDto: UpdateNotebookDto,
+  ): Promise<Notebook> {
+    return this.notebooksService.update(Number(id), updateNotebookDto);
   }
 
   @Post()

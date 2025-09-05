@@ -88,4 +88,42 @@ describe('NotebooksController', () => {
       );
     });
   });
+
+  //Test para Find One
+  describe('Encontrar una notebook por ID', () => {
+    it('deberia devolver una notebook por ID', async () => {
+      const notebook: Notebook = { id: 1, title: 'notebook 1', content: 'i9' };
+      mockService.findOne.mockResolvedValue(notebook);
+      const result = await controller.findOne('1');
+      expect(result).toEqual(notebook);
+      expect(mockService.findOne).toHaveBeenCalledWith(1);
+    });
+  });
+
+  //Test para Update
+  describe('update', () => {
+    it('deberia llamar al service para actualizar una notebook', async () => {
+      const updateDto: UpdateNotebookDto = { title: 'Updated Notebook' };
+      const updatedNotebook: Notebook = {
+        id: 1,
+        title: 'Updated Notebook',
+        content: 'i9',
+      };
+
+      mockService.update.mockResolvedValue(updatedNotebook);
+
+      const result = await controller.update('1', updateDto);
+
+      expect(result).toEqual(updatedNotebook);
+      expect(mockService.update).toHaveBeenCalledWith(1, updateDto);
+    });
+
+    it('deberia lanzar una excepcion si la notebook a actualizar no existe', async () => {
+      mockService.update.mockRejectedValue(
+        new HttpException('Notebook not found', HttpStatus.NOT_FOUND),
+      );
+
+      await expect(controller.update('99', {})).rejects.toThrow(HttpException);
+    });
+  });
 });
