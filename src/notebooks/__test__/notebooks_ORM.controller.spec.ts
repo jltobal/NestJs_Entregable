@@ -34,6 +34,10 @@ describe('NotebooksController (Integration Test)', () => {
                 (where?.title === 'Lenovo' ? 'T-480s' : 'Test_Content'),
             })),
             clear: jest.fn(async () => {}),
+            preload: jest.fn(async (notebook: Partial<Notebook>) => ({
+              id: Number(notebook.id) || 1,
+              ...notebook,
+            })),
           },
         },
       ],
@@ -46,6 +50,22 @@ describe('NotebooksController (Integration Test)', () => {
 
   afterEach(async () => {
     await repository.clear();
+  });
+
+  it('deberia editar una notebook', async () => {
+    const updateDto = {
+      title: 'Nuevo_titulo',
+      content: 'Nuevo_contenido',
+    };
+
+    const result = await controller.update('1', updateDto);
+    expect(result).toBeDefined();
+    expect(result.title).toEqual(updateDto.title);
+    expect(result.content).toEqual(updateDto.content);
+
+    const updateNotebook = await repository.findOne({
+      where: { title: updateDto.title },
+    });
   });
 
   it('debería crear una notebook y guardarla en la base de datos', async () => {
