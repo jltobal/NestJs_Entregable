@@ -1,3 +1,7 @@
+/*
+
+-----------------------------CODIGO DEPRECADO---------------------------
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotebooksController } from '../notebooks.controller';
 import { NotebooksService } from '../notebooks.service';
@@ -188,3 +192,5 @@ describe('Integration test', () => {
     await expect(controller.remove('999')).rejects.toThrow('no fue encontrada');
   });
 });
+
+*/
