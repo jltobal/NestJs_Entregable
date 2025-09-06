@@ -33,7 +33,6 @@ describe('NotebooksController', () => {
     expect(controller).toBeDefined();
   });
 
-  //Traer todos
   describe('findAll', () => {
     it('deberia devolver la lista de elementos desde el service', async () => {
       const mockList: Notebook[] = [
@@ -56,7 +55,7 @@ describe('NotebooksController', () => {
     });
   });
 
-  //Crear notebook
+  //Crear
   describe('create', () => {
     it('deberia llamar al service con el DTO correcto', async () => {
       const dto: CreateNotebookDto = { title: 'Notebook 1', content: 'i9' };
@@ -71,7 +70,6 @@ describe('NotebooksController', () => {
       mockService.create.mockRejectedValue(
         new HttpException('Error creating notebook', HttpStatus.BAD_REQUEST),
       );
-
       const invalidDto: CreateNotebookDto = { title: 'test', content: '' };
       await expect(controller.create(invalidDto)).rejects.toThrow(
         HttpException,
@@ -89,6 +87,7 @@ describe('NotebooksController', () => {
       expect(mockService.findOne).toHaveBeenCalledWith(1);
     });
 
+    // --> CASO DE ERROR FALTANTE PARA FINDONE
     it('deberia lanzar HttpException si la notebook no se encuentra', async () => {
       mockService.findOne.mockRejectedValue(
         new HttpException('Notebook not found', HttpStatus.NOT_FOUND),
