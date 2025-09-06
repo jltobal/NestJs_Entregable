@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { NotebooksService } from '../notebooks.service';
 import { Notebook } from '../entities/notebook.entity';
 import { CreateNotebookDto } from '../dto/create-notebook.dto';

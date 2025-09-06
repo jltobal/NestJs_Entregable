@@ -6,7 +6,7 @@ import { Notebook } from '../entities/notebook.entity';
 import { Repository } from 'typeorm';
 import { CreateNotebookDto } from '../dto/create-notebook.dto';
 import { UpdateNotebookDto } from '../dto/update-notebook.dto';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 
 describe('Integration test', () => {
   let controller: NotebooksController;
